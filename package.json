@@ -1,0 +1,24 @@
+{
+  "name": "pyrvcompiler",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "watch": "watchify ./javascripts/main.js -o public/javascripts/bundle.js -v",
+    "build": "browserify ./javascripts/main.js -o public/javascripts/bundle.js",
+    "start": "npm run watch | nodemon ./bin/www"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.16.0",
+    "http-errors": "~1.6.2",
+    "morgan": "~1.9.0",
+    "node-c-parser": "~1.0.11",
+    "pug": "~2.0.3"
+  },
+  "devDependencies": {
+    "browserify": "^16.2.3",
+    "nodemon": "^1.18.6",
+    "watchify": "^3.11.0"
+  }
+}
