@@ -4,9 +4,7 @@ var discompiler = function() {
 
   /* Default all registers to contain no variable represented by null */
   var registers = new Array(32);
-  for (var i = 0; i < 32; i++) {
-    registers.push(null);
-  }
+
 
   var memory = [];
   var varCount = 0;
@@ -25,8 +23,7 @@ var discompiler = function() {
     }
   };
 
-  /* stack pointer */
-  registers[2] = new variable('stack pointer', 2048, null);
+
 
 
 
@@ -43,15 +40,27 @@ var discompiler = function() {
       varCount += 1;
       var newName = 'var' + varCount.toString();
       registers[r1] = new variable(newName, val, null);
+      return 'int ' + registers[r1].name + ' = ' + val + ';';
     } else {
       registers[r1].val = val;
+      return registers[r1].name + ' = ' + val + ';';
     }
-    var conversion = 'int ' + registers[r1].name + ' = ' + val + ';';
-    return conversion;
   }
 
   this.discompile = function(assembly) {
     console.log('discompiling..');
+
+    /* Initialize environment */
+    varCount = 0;
+    registers = new Array(32);
+    for (var i = 0; i < 32; i++) {
+      registers.push(null);
+    }
+    memory = [];
+    /* Initialize stack pointer */
+    registers[2] = new variable('stack pointer', 2048, null);
+
+
     var output = [];
     var tokens = parser.tokenize(assembly);
     for (var i = 0; i < tokens.length; i++) {

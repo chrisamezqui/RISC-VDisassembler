@@ -10,12 +10,15 @@ $(function() {
     lineNumbers : true,
     lineWrapping : true
   });
-  cm.setSize(800,650);
+  cm.setSize(800,550);
   document.getElementById('codeform').addEventListener('submit', processCode);
 });
 
+
+
 function processCode(e) {
   var input = document.getElementById('codeform').elements['code'].value;
+  /*place holder */
   try {
     var output = discompiler.discompile(input);
     var margin = 0;
@@ -30,10 +33,8 @@ function processCode(e) {
     //Placeholder
     var htmloutput = 'Error 100: Something went wrong.';
   }
-  console.log(htmloutput);
 
   document.getElementById('codeoutput').innerHTML = htmloutput;
-  console.log(document.getElementById('codeoutput').innerHTML);
 
 }
 
