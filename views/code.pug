@@ -2,18 +2,22 @@ extends layout
 
 block content
   .container
-    h1= title
+    h1(align='center')=title
     .row
       .col-md-8.col-md-offset-2
-        form#codeform(action="#")
+        form#codeform(action="#codeoutput")
           label(for=code) Put your code here
           textarea#code(type="text" class="md-textarea form-control")
           br
-          button.btn.btn-dark(type="submit") Compile
+          button.btn.btn-dark(type="submit") Go
+    .row
+      .col-md-8.col-md-offset-2
+        .jumbotron.jumbotron-fluid
+          p#codeoutput
+            i discompiled c code will show here...
 
 
   script(src="//cdn.jsdelivr.net/npm/codemirror@5.41.0/lib/codemirror.min.js")
   script(src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.41.0/mode/clike/clike.min.js")
   script(src="https://code.jquery.com/jquery-3.3.1.min.js")
   script(src='/javascripts/bundle.js')
-    
