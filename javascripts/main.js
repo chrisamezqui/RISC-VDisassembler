@@ -1,25 +1,35 @@
 // var parser = require('node-c-parser'); For use with future implementation of C to RISC-V compiler
 var discompiler = require('./discompiler');
 
-/* On page load, implement code mirror textarea and assign event listeners. */
+/* Implement code mirror textarea. */
+var textbox = document.getElementById('code');
+var cm = CodeMirror.fromTextArea(textbox, {
+  value : "Hello World",
+  mode : "C-like",
+  lineNumbers : true,
+  lineWrapping : true
+});
+cm.setSize(800,550);
+
+/* On page load, assign event listeners. */
 $(function() {
-  var textbox = document.getElementById('code');
-  var cm = CodeMirror.fromTextArea(textbox, {
-    value : "Hello World",
-    mode : "C-like",
-    lineNumbers : true,
-    lineWrapping : true
-  });
-  cm.setSize(800,550);
   document.getElementById('codeform').addEventListener('submit', processCode);
 });
 
 
 
 function processCode(e) {
-  var input = document.getElementById('codeform').elements['code'].value;
-  /*place holder */
+  let input = document.getElementById('codeform').elements['code'].value;
   try {
+    let output = discompiler.discompile(input);
+    console.log(output);
+  } catch(e) {
+    console.log(e);
+  }
+
+
+  /*place holder */
+  /*try {
     var output = discompiler.discompile(input);
     var margin = 0;
     var htmloutput = 'int main(args[]) {<br><div style=\'margin-left:40px\'>';
@@ -35,6 +45,7 @@ function processCode(e) {
   }
 
   document.getElementById('codeoutput').innerHTML = htmloutput;
+  */
 
 }
 

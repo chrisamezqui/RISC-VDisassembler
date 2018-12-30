@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
 
 /* GET code page. */
 router.get('/code', function(req, res) {
-  res.render('code', {title: 'Simple RISC-V Discompiler'});
+  res.render('code', {title: 'Simple RISC-V Disassembler'});
 });
 
 module.exports = router;
