@@ -5,6 +5,11 @@ var discompiler = function() {
   /* Default all registers to contain no variable represented by null */
   var registers = new Array(32);
 
+  /* Maps tag symbol to code line. */
+  var refTable = new Map();
+
+  /* Each elements is: ['jump start', 'jump destination', 'instruction type']. */
+  var jumpTable = [];
 
   var memory = [];
   var varCount = 0;
@@ -50,21 +55,32 @@ var discompiler = function() {
     var r1 = args[0];
     var r2 = args[1];
     var val = args[2];
-    if (registers[r2] == null) {
+    if (r2 != 0 && registers[r2] == null) {
       throw "Error: a register requires assignment."
     }
     //var sum = parseInt(registers[r2].val) + parseInt(val);
+    var out = '';
     if (registers[r1] == null) {
       registers[r1] = createStdVar();
-      return 'int ' + registers[r1].name + ' = ' + registers[r2].name + ' + ' + val + ';';
-    } else {
-      //registers[r1].val = sum;
-      return registers[r1].name + ' = ' + registers[r2].name + ' + ' + val + ';';
+      out += 'int ';
     }
+    if (r2 == 0) {
+      out += registers[r1].name + ' = ' + val + ';';
+    } else {
+      out += registers[r1].name + ' = ' + registers[r2].name + ' + ' + val + ';';
+    }
+    return out;
   }
 
-  function handleJal(args) {
-    
+  //Assumption: return address is always stored in x1 register. there shouldn't be arithmetic with it.
+  function handleJal(args, line) {
+    //var rd = args[0];
+    var symbol = args[1];
+    jumpTable.push([line, symbol, 'jal']);
+  }
+
+  function handleTag(symbol, lineNum) {
+    refTable.set(symbol.slice(0,-1), lineNum);
   }
 
   this.discompile = function(assembly) {
@@ -77,6 +93,10 @@ var discompiler = function() {
       registers.push(null);
     }
     memory = [];
+    refTable = new Map();
+    jumpTable = [];
+    var lineNum = 0; // Corresponds to the line in transalated code, not assembly input.
+
     /* Initialize stack pointer */
     registers[2] = new variable('stack pointer', 2048, null);
 
@@ -87,16 +107,21 @@ var discompiler = function() {
       switch(tokens[i].instruction) {
         case 'li' :
           output.push(handleLi(tokens[i].args));
+          lineNum+=1;
           break;
         case 'addi':
           output.push(handleAddi(tokens[i].args));
+          lineNum+=1;
           break;
         case 'jal':
+          handleJal(tokens[i].args, lineNum);
           break;
         default:
-          //is a tag
+          handleTag(tokens[i].instruction, lineNum);
       }
     }
+    //console.log(refTable);
+    //console.log(jumpTable);
     return output;
   }
 
